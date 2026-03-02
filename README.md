@@ -53,7 +53,7 @@ Replace it with your actual Groq API Key.
 3. Run the App
 Bash
 python app.py
-Visit http://127.0.0.1:5000 to experience the luxury dashboard.
+Visit http://127.0.0.1:5000 to experience the Aesthetic dashboard.
 
 🎓 Academic Context
 Developed as a 2nd Year CSE Mini-Project at JCT College of Engineering and Technology.
