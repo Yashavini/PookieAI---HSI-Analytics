@@ -1,6 +1,6 @@
 HSI-Llama: Hyperspectral Analytics
 3D-CNN Pixel Classification + Llama-3.3 Intelligent QA
-Project Link: file:///C:/Users/ADMIN/Desktop/HSI%20Analytics/Frontend/index.html
+Project Link: https://yashavini.github.io/PookieAI---HSI-Analytics/
 
 📖 Overview
 This project addresses the complexity of Hyperspectral Image (HSI) Analysis by combining deep learning with generative AI. Using the Indian Pines dataset, we implement a 3D-Convolutional Neural Network (3D-CNN) to identify land-cover classes with high precision. To make this data accessible, we integrated Llama-3.3 via Groq API, allowing users to ask natural language questions about the results through a premium, "Baddie Luxury" obsidian-themed interface.
