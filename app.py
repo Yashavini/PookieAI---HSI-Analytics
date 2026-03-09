@@ -124,8 +124,8 @@ def chat():
         return jsonify({"answer": f"Glitch: {str(e)}"}), 500
 
 if __name__ == "__main__":
-    # Required for Cloud: Dynamic port selection
+    # Get port from environment variable, default to 5000 for local testing
     port = int(os.environ.get("PORT", 5000))
-
+    # Must use 0.0.0.0 to be visible to Render's network
     app.run(host='0.0.0.0', port=port)
 
