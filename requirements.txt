@@ -3,6 +3,8 @@ flask-cors
 gunicorn
 requests
 python-dotenv
+flask-cors
 numpy
 scipy
 matplotlib
+
