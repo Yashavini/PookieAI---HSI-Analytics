@@ -15,6 +15,10 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app)
 
+@app.route('/')
+def home():
+    return "<h1>Pookie AI Backend is Online, Diva! </h1><p>The HSI Research Portal is ready.</p>"
+
 # Credentials from Environment
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
@@ -124,3 +128,4 @@ if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
 
     app.run(host='0.0.0.0', port=port)
+
