@@ -1,7 +1,8 @@
 flask
 flask-cors
+gunicorn
+requests
+python-dotenv
 numpy
 scipy
 matplotlib
-requests
-gunicorn
