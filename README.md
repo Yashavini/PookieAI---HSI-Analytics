@@ -15,33 +15,37 @@ Luxury UI: Glassmorphism-based dashboard designed for high-end research presenta
 📂 Project Structure
 Plaintext
 /HSI-Analytics
- -  requirements.txt      Project dependencies
- -   Procfile              # Deployment config for Cloud (Render)
- -  README.md             # You are here!
+ -     requirements.txt      Project dependencies
+ -     Procfile              # Deployment config for Cloud (Render)
+ -     README.md             
  -
- ─Data/                 # .mat Dataset storage
-    Indian_pines_corrected.mat
-    Indian_pines_gt.mat
+ ─Data/                 
+-     Indian_pines_corrected.mat
+-     Indian_pines_gt.mat
 
--  Backend/              # Flask Server Logic
+-  Backend/              
 -      app.py            # Main API & AI Integration
 -     model.py          # Deep Learning Model (3D-CNN)
 -     util.py           # Data processing utilities
 -     .env              # API Credentials (Hidden)
--Frontend/             # Dashboard Interface
+-Frontend/             
 -     index.html        # Glassmorphism UI
 
         
-🚀 Setup & Installation
+ Setup & Installation
+
 1. Clone the Repository
+
 Bash
-git clone https://github.com/Yashavini/HSI-Analytics.git
+git clone https://github.com/Yashavini/pookieAI---HSI-Analytics.git
 cd HSI-Analytics
-2. Configure Environment
+
+3. Configure Environment
 Create a .env file in the Backend/ directory:
 
 Plaintext
 GROQ_API_KEY=your_actual_key_here
+
 3. Install Dependencies
 Bash
 pip install -r requirements.txt
