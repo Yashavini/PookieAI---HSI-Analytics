@@ -20,14 +20,9 @@ GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
 LUXURY_MODEL = "llama-3.3-70b-versatile"
 
-# --- PORTABLE PATH LOGIC ---
-# This finds the 'Data' folder relative to where this app.py is saved
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-# Moves up one level to find 'Data' if it sits outside Backend
-DATA_DIR = os.path.join(os.path.dirname(BASE_DIR), "Data")
-
-CORRECTED_PATH = os.path.join(DATA_DIR, "Indian_pines_corrected.mat")
-GT_PATH = os.path.join(DATA_DIR, "Indian_pines_gt.mat")
+CORRECTED_PATH = os.path.join(BASE_DIR, "Indian_pines_corrected.mat")
+GT_PATH = os.path.join(BASE_DIR, "Indian_pines_gt.mat")
 
 def analyze_hsi_metadata():
     """Extracts technical metadata from .mat files regardless of local path."""
@@ -127,4 +122,5 @@ def chat():
 if __name__ == "__main__":
     # Required for Cloud: Dynamic port selection
     port = int(os.environ.get("PORT", 5000))
+
     app.run(host='0.0.0.0', port=port)
