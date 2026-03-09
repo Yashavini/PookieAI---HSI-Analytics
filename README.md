@@ -15,26 +15,27 @@ Luxury UI: Glassmorphism-based dashboard designed for high-end research presenta
 📂 Project Structure
 Plaintext
 /HSI-Analytics
-│   requirements.txt      # Project dependencies
-│   Procfile              # Deployment config for Cloud (Render)
-│   README.md             # You are here!
-│
-├───Data/                 # .mat Dataset storage
-│       Indian_pines_corrected.mat
-│       Indian_pines_gt.mat
-│
-├───Backend/              # Flask Server Logic
-│       app.py            # Main API & AI Integration
-│       model.py          # Deep Learning Model (3D-CNN)
-│       util.py           # Data processing utilities
-│       .env              # API Credentials (Hidden)
-│
-└───Frontend/             # Dashboard Interface
-        index.html        # Glassmorphism UI
+ -  requirements.txt      Project dependencies
+ -   Procfile              # Deployment config for Cloud (Render)
+ -  README.md             # You are here!
+ -
+ ─Data/                 # .mat Dataset storage
+    Indian_pines_corrected.mat
+    Indian_pines_gt.mat
+
+-  Backend/              # Flask Server Logic
+-      app.py            # Main API & AI Integration
+-     model.py          # Deep Learning Model (3D-CNN)
+-     util.py           # Data processing utilities
+-     .env              # API Credentials (Hidden)
+-Frontend/             # Dashboard Interface
+-     index.html        # Glassmorphism UI
+
+        
 🚀 Setup & Installation
 1. Clone the Repository
 Bash
-git clone https://github.com/YOUR_USERNAME/HSI-Analytics.git
+git clone https://github.com/Yashavini/HSI-Analytics.git
 cd HSI-Analytics
 2. Configure Environment
 Create a .env file in the Backend/ directory:
