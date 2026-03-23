@@ -3,6 +3,8 @@ Deep Learning for Hyperspectral Image Classification
 💎 Project Overview
 This project is an elite research dashboard designed for the analysis and classification of the Indian Pines Hyperspectral Dataset. It features a custom 3D-CNN/HybridSN architecture for spatial-spectral feature extraction and a GenZ-inspired AI Research Mentor, Professor Pookie, powered by Llama 3.3 via Groq.
 
+https://yashavini.github.io/PookieAI---HSI-Analytics/
+
 ✨ Key Features
 Live Spectral Analysis: Real-time extraction of spectral signatures from specific pixel coordinates.
 
@@ -10,7 +12,7 @@ RGB Reconstruction: Visualization of high-dimensional HSI data into human-readab
 
 AI Mentorship: Integrated LLM for technical guidance on HSI processing and model metrics.
 
-Luxury UI: Glassmorphism-based dashboard designed for high-end research presentation.
+Professional UI: Glassmorphism-based dashboard designed for high-end research presentation.
 
 📂 Project Structure
 Plaintext
