@@ -2,125 +2,239 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>PookieAI - HSI Analytics</title>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;600&family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet">
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    
     <style>
-        :root { --bg: #050505; --card: #0c0c0c; --accent: #d4af37; --text: #e0e0e0; --glass: rgba(255, 255, 255, 0.03); }
-        * { box-sizing: border-box; transition: all 0.2s ease; }
-        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        :root { 
+            --bg: #050505; 
+            --card: #0c0c0c; 
+            --accent: #d4af37; 
+            --text: #e0e0e0; 
+            --glass: rgba(255, 255, 255, 0.03); 
+            --border: #1a1a1a;
+        }
+
+        * { box-sizing: border-box; transition: all 0.25s ease; -webkit-tap-highlight-color: transparent; }
+        
+        body { 
+            background: var(--bg); 
+            color: var(--text); 
+            font-family: 'Inter', sans-serif; 
+            margin: 0; 
+            display: flex; 
+            height: 100vh; 
+            overflow: hidden; 
+        }
 
         /* Login Screen */
-        #login-screen { position: fixed; inset: 0; background: #000; z-index: 9999; display: flex; justify-content: center; align-items: center; }
-        .login-card { background: var(--card); padding: 40px; border-radius: 25px; border: 1px solid #222; text-align: center; width: 350px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+        #login-screen { 
+            position: fixed; 
+            inset: 0; 
+            background: #000; 
+            z-index: 9999; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            padding: 20px; 
+        }
+        .login-card { 
+            background: var(--card); 
+            padding: 40px; 
+            border-radius: 30px; 
+            border: 1px solid #222; 
+            text-align: center; 
+            width: 100%; 
+            max-width: 360px; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.9); 
+        }
         .hidden { display: none !important; }
 
-        /* Sidebar */
-        .nav-sidebar { width: 80px; background: #000; border-right: 1px solid #1a1a1a; display: flex; flex-direction: column; align-items: center; padding: 40px 0; gap: 35px; }
-        .nav-item { color: #333; font-size: 24px; cursor: pointer; }
-        .nav-item.active { color: var(--accent); transform: scale(1.2); }
+        /* Navigation Sidebar (Desktop) */
+        .nav-sidebar { 
+            width: 85px; 
+            background: #000; 
+            border-right: 1px solid var(--border); 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            padding: 50px 0; 
+            gap: 40px; 
+            z-index: 100; 
+        }
+        .nav-item { color: #333; font-size: 26px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .nav-item.active { color: var(--accent); transform: scale(1.25); }
 
         /* Main Viewport */
-        .viewport { flex: 1; padding: 40px; position: relative; display: flex; flex-direction: column; }
-        .screen { display: none; height: 100%; flex-direction: column; animation: fadeIn 0.5s ease; }
+        .viewport { 
+            flex: 1; 
+            padding: 40px; 
+            position: relative; 
+            display: flex; 
+            flex-direction: column; 
+            overflow: hidden; 
+        }
+        .screen { display: none; height: 100%; flex-direction: column; animation: fadeIn 0.4s ease-out; }
         .screen.active { display: flex; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(8px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
 
-        h1 { font-family: 'Playfair Display'; font-size: 2.5rem; margin: 0; color: #fff; }
-        .subtitle { color: var(--accent); text-transform: uppercase; letter-spacing: 4px; font-size: 0.65rem; margin-bottom: 25px; }
+        h1 { font-family: 'Playfair Display'; font-size: 2.6rem; margin: 0; color: #fff; letter-spacing: -0.5px; }
+        .subtitle { color: var(--accent); text-transform: uppercase; letter-spacing: 5px; font-size: 0.7rem; margin-bottom: 30px; font-weight: 500; }
 
-        /* Chat */
-        #chat-window { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; padding-bottom: 10px; }
-        .msg { max-width: 80%; padding: 15px 20px; border-radius: 18px; font-size: 0.9rem; line-height: 1.5; }
-        .ai-msg { background: var(--glass); border: 1px solid #222; align-self: flex-start; }
-        .user-msg { background: var(--accent); color: #000; align-self: flex-end; font-weight: 500; }
+        /* Chat System */
+        #chat-window { 
+            flex: 1; 
+            overflow-y: auto; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 15px; 
+            padding-right: 10px;
+            scrollbar-width: none;
+        }
+        #chat-window::-webkit-scrollbar { display: none; }
 
-        .input-area { display: flex; gap: 10px; background: var(--card); padding: 8px; border-radius: 15px; border: 1px solid #1a1a1a; margin-top: 20px; }
-        input { flex: 1; background: transparent; border: none; color: #fff; padding: 10px; outline: none; }
-        button { background: #fff; color: #000; border: none; padding: 10px 25px; border-radius: 10px; font-weight: 600; cursor: pointer; }
-        button:hover { background: var(--accent); }
+        .msg { max-width: 85%; padding: 16px 22px; border-radius: 20px; font-size: 0.92rem; line-height: 1.6; word-wrap: break-word; }
+        .ai-msg { background: var(--glass); border: 1px solid #222; align-self: flex-start; border-bottom-left-radius: 4px; }
+        .user-msg { background: var(--accent); color: #000; align-self: flex-end; font-weight: 600; border-bottom-right-radius: 4px; }
 
-        /* Visualization */
-        .luxury-card { background: var(--card); border: 1px solid #1a1a1a; border-radius: 20px; padding: 20px; margin-top: 10px; }
-        .viz-img { width: 100%; border-radius: 12px; border: 1px solid #222; margin-top: 10px; }
+        .input-area { 
+            display: flex; 
+            gap: 12px; 
+            background: var(--card); 
+            padding: 10px; 
+            border-radius: 18px; 
+            border: 1px solid var(--border); 
+            margin-top: 20px; 
+            align-items: center;
+        }
+        input { flex: 1; background: transparent; border: none; color: #fff; padding: 12px; outline: none; font-size: 0.95rem; }
+        .send-btn { 
+            background: #fff; 
+            color: #000; 
+            border: none; 
+            padding: 12px 28px; 
+            border-radius: 14px; 
+            font-weight: 700; 
+            cursor: pointer; 
+            white-space: nowrap; 
+        }
+        .send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        /* Visualization Layout */
+        .viz-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; height: 100%; }
+        .luxury-card { background: var(--card); border: 1px solid var(--border); border-radius: 24px; padding: 25px; display: flex; flex-direction: column; }
+        .viz-img { width: 100%; border-radius: 15px; border: 1px solid #222; margin-top: 15px; object-fit: contain; }
+
+        /* Profile Styles */
+        .profile-badge { display: inline-block; background: var(--accent); color: #000; padding: 4px 12px; border-radius: 50px; font-size: 0.75rem; font-weight: 800; margin-bottom: 10px; }
+
+        /* MOBILE RESPONSIVENESS */
+        @media (max-width: 800px) {
+            body { flex-direction: column-reverse; }
+            .nav-sidebar { 
+                width: 100%; height: 80px; flex-direction: row; 
+                justify-content: space-around; padding: 0; 
+                border-right: none; border-top: 1px solid var(--border); 
+                background: #000;
+            }
+            .viewport { padding: 25px 20px 30px 20px; flex: 1; }
+            h1 { font-size: 1.9rem; }
+            .viz-grid { grid-template-columns: 1fr; overflow-y: auto; padding-bottom: 20px; }
+            .msg { max-width: 92%; }
+            .input-area { margin-bottom: 10px; }
+        }
     </style>
 </head>
 <body>
 
     <div id="login-screen">
         <div class="login-card">
-            <h1>Scholar Access</h1>
-            <p style="color: #666; font-size: 0.8rem; margin: 10px 0 25px;">HSI Research Analytics</p>
-            <input type="password" id="passkey" placeholder="Enter Code: Password" style="width: 100%; background: #111; border: 1px solid #222; color: #fff; padding: 12px; border-radius: 10px; text-align: center; margin-bottom: 15px;">
-            <button onclick="login()" style="width: 100%;">Unlock Portal</button>
+            <h1 style="font-size: 2rem;">Scholar Portal</h1>
+            <p style="color: #555; font-size: 0.85rem; margin: 10px 0 30px;">HSI Research Analytics • Indian Pines</p>
+            <input type="password" id="passkey" placeholder="Passkey: Password" style="width: 100%; background: #111; border: 1px solid #222; color: #fff; padding: 15px; border-radius: 12px; text-align: center; margin-bottom: 20px;">
+            <button onclick="login()" style="width: 100%; background: #fff; color: #000; border: none; padding: 15px; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 1rem;">Unlock Access</button>
         </div>
     </div>
 
     <nav class="nav-sidebar">
-        <div class="nav-item active" onclick="showScreen('home', this)"><ion-icon name="chatbox-outline"></ion-icon></div>
-        <div class="nav-item" onclick="showScreen('data', this)"><ion-icon name="cube-outline"></ion-icon></div>
-        <div class="nav-item" onclick="showScreen('profile', this)"><ion-icon name="person-outline"></ion-icon></div>
+        <div class="nav-item active" onclick="showScreen('home', this)"><ion-icon name="chatbubble-ellipses-outline"></ion-icon></div>
+        <div class="nav-item" onclick="showScreen('data', this)"><ion-icon name="analytics-outline"></ion-icon></div>
+        <div class="nav-item" onclick="showScreen('profile', this)"><ion-icon name="id-card-outline"></ion-icon></div>
     </nav>
 
     <div class="viewport">
         <div id="home" class="screen active">
             <h1>Professor Pookie</h1>
-            <div class="subtitle">AI Research Mentor</div>
+            <div class="subtitle">AI Geospatial Mentor</div>
             <div id="chat-window"></div>
             <div class="input-area">
-                <input type="text" id="userInput" placeholder="Ask about the Indian Pines dataset...">
-                <button onclick="sendMessage()">Send</button>
+                <input type="text" id="userInput" placeholder="Analyze the spectral data, Diva...">
+                <button class="send-btn" onclick="sendMessage()">Send</button>
             </div>
         </div>
 
         <div id="data" class="screen">
-            <h1>Hyperspectral Cube</h1>
-            <div class="subtitle">Visualization & Spectral Analysis</div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <h1>Spectral Analysis</h1>
+            <div class="subtitle">HSI Visualization Engine</div>
+            <div class="viz-grid">
                 <div class="luxury-card">
-                    <p style="color:var(--accent); margin:0;">RGB RECONSTRUCTION</p>
-                    <div id="image-container">Click sidebar icons to refresh...</div>
+                    <p style="color:var(--accent); font-weight: 600; margin:0; font-size: 0.75rem;">RGB RECONSTRUCTION</p>
+                    <div id="image-container" style="flex:1; display:flex; align-items:center; justify-content:center; color:#333; font-size: 0.8rem;">Initializing Sensor...</div>
                 </div>
                 <div class="luxury-card">
-                    <p style="color:var(--accent); margin:0;">SPECTRAL SIGNATURE</p>
-                    <div id="graph-container">Loading...</div>
+                    <p style="color:var(--accent); font-weight: 600; margin:0; font-size: 0.75rem;">SPECTRAL SIGNATURE</p>
+                    <div id="graph-container" style="flex:1; display:flex; align-items:center; justify-content:center; color:#333; font-size: 0.8rem;">Awaiting Data Stream...</div>
                 </div>
             </div>
         </div>
 
         <div id="profile" class="screen">
             <h1>Student Identity</h1>
-            <div class="subtitle">Credentials & Project Status</div>
+            <div class="subtitle">Researcher Credentials</div>
             <div class="luxury-card">
-                <h2 style="margin:0; color:var(--accent);">Yash</h2>
-                <p> Yash | 2nd year CSE </p>
-                <hr style="border:0; border-top:1px solid #222; margin:20px 0;">
-                <p><strong>Project:</strong> 3D-CNN Hyperspectral Analysis</p>
-                <p><strong>Status:</strong> Researching Indian Pines Slayage ✨</p>
+                <div class="profile-badge">ELITE DEVELOPER</div>
+                <h2 style="margin:5px 0; color:#fff; font-size: 2rem;">Yashavini N</h2>
+                <p style="color:#888; margin-top: 0;">2nd Year CSE • Future AI Architect</p>
+                <hr style="border:0; border-top:1px solid #1a1a1a; margin:25px 0;">
+                <p><strong>Primary Research:</strong> 3D-CNN Hyperspectral Classification</p>
+                <p><strong>Notable Win:</strong> 3rd Prize - Hackathon @ PSG Tech Coimbatore</p>
+                <p><strong>Ambition:</strong> High-Wealth Tech Innovation & Slayage</p>
+                <div style="margin-top: 30px; padding: 15px; background: rgba(212, 175, 55, 0.05); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 12px; font-size: 0.85rem; color: var(--accent);">
+                    Project Status: Indian Pines Dataset Analyzed (97.8% Accuracy)
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // BACKEND CONFIG
-        let API_URL = "https://pookieai-hsi-analytics-2.onrender.com";
+        const API_URL = "https://pookieai-hsi-analytics-2.onrender.com";
 
-        // LOGIN FUNCTION
+        // Authentication Logic
         function login() {
             const val = document.getElementById('passkey').value.trim();
             if(val === "Password") {
                 document.getElementById('login-screen').classList.add('hidden');
                 setTimeout(() => {
                     const chat = document.getElementById('chat-window');
-                    chat.innerHTML += `<div class="msg ai-msg">Professor Pookie here. The Indian Pines data is absolutely slaying today. What are we analyzing? 💅✨</div>`;
-                }, 500);
+                    chat.innerHTML += `<div class="msg ai-msg">Professor Pookie is online. The Indian Pines dataset is absolutely slaying today, Scholar Diva. What’s our research focus? 💅✨</div>`;
+                }, 400);
             } else {
                 alert("Incorrect code, Diva.");
             }
         }
 
-        // NAVIGATION
+        // Viewport Switcher
         function showScreen(id, el) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
@@ -129,25 +243,34 @@
             if(id === 'data') loadVisuals();
         }
 
-        // FETCH VISUALS
+        // Data Fetching
         async function loadVisuals() {
             try {
-                const rgb = await fetch(`${API_URL}/api/visualize/rgb`).then(r => r.json());
-                document.getElementById('image-container').innerHTML = `<img src="data:image/png;base64,${rgb.image}" class="viz-img">`;
-                const spec = await fetch(`${API_URL}/api/visualize/spectral`).then(r => r.json());
-                document.getElementById('graph-container').innerHTML = `<img src="data:image/png;base64,${spec.graph}" class="viz-img">`;
+                const rgbRes = await fetch(`${API_URL}/api/visualize/rgb`);
+                const rgbData = await rgbRes.json();
+                document.getElementById('image-container').innerHTML = `<img src="data:image/png;base64,${rgbData.image}" class="viz-img">`;
+
+                const specRes = await fetch(`${API_URL}/api/visualize/spectral`);
+                const specData = await specRes.json();
+                document.getElementById('graph-container').innerHTML = `<img src="data:image/png;base64,${specData.graph}" class="viz-img">`;
             } catch (e) {
-                console.error("Backend offline.");
+                console.error("Data fetch failed.");
+                document.getElementById('image-container').innerText = "Sensor Offline.";
             }
         }
 
-        // CHAT SYSTEM
+        // Chat Orchestration
         async function sendMessage() {
             const input = document.getElementById('userInput');
+            const btn = document.querySelector('.send-btn');
             const chat = document.getElementById('chat-window');
             const text = input.value.trim();
+            
             if(!text) return;
 
+            // Apply loading state to UI
+            btn.disabled = true;
+            btn.innerText = "Thinking...";
             chat.innerHTML += `<div class="msg user-msg">${text}</div>`;
             input.value = '';
             chat.scrollTop = chat.scrollHeight;
@@ -158,20 +281,23 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ question: text })
                 });
+                
+                if (!res.ok) throw new Error("API Limit");
+                
                 const data = await res.json();
                 chat.innerHTML += `<div class="msg ai-msg"><strong>Pookie:</strong> ${data.answer}</div>`;
-                chat.scrollTop = chat.scrollHeight;
             } catch (e) {
                 chat.innerHTML += `<div class="msg ai-msg">Network glitch. Stay slay anyway. 🎀</div>`;
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "Send";
+                chat.scrollTop = chat.scrollHeight;
             }
         }
 
-        // ENTER KEY LOGIN
-        document.getElementById("passkey").addEventListener("keyup", function(e) {
-            if (e.key === "Enter") login();
-        });
+        // Keyboard Support
+        document.getElementById("passkey").addEventListener("keyup", (e) => { if (e.key === "Enter") login(); });
+        document.getElementById("userInput").addEventListener("keyup", (e) => { if (e.key === "Enter") sendMessage(); });
     </script>
 </body>
-
 </html>
-
