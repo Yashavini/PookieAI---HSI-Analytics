@@ -15,10 +15,6 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app)
 
-@app.route('/')
-def home():
-    return "<h1>Pookie AI Backend is Online, Diva! </h1><p>The HSI Research Portal is ready.</p>"
-
 # Credentials from Environment
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
@@ -28,15 +24,32 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CORRECTED_PATH = os.path.join(BASE_DIR, "Indian_pines_corrected.mat")
 GT_PATH = os.path.join(BASE_DIR, "Indian_pines_gt.mat")
 
+# --- DATA PRE-LOADING (The Speed Fix) ---
+# We load the data once globally so the routes respond instantly
+print("Professor Pookie is loading the Indian Pines data... stay slay.")
+try:
+    if os.path.exists(CORRECTED_PATH):
+        DATA_CUBE = loadmat(CORRECTED_PATH)['indian_pines_corrected']
+        GROUND_TRUTH = loadmat(GT_PATH)['indian_pines_gt']
+        DATA_LOADED = True
+    else:
+        DATA_LOADED = False
+        print("Error: Dataset files not found in root directory.")
+except Exception as e:
+    DATA_LOADED = False
+    print(f"Error loading dataset: {e}")
+
+@app.route('/')
+def home():
+    return "<h1>Pookie AI Backend is Online, Diva! </h1><p>The HSI Research Portal is ready.</p>"
+
 def analyze_hsi_metadata():
-    """Extracts technical metadata from .mat files regardless of local path."""
-    if not os.path.exists(CORRECTED_PATH):
-        return {"status": "Offline", "error": "Dataset folder 'Data' not found."}
+    """Extracts technical metadata from pre-loaded data."""
+    if not DATA_LOADED:
+        return {"status": "Offline", "error": "Dataset not loaded."}
     try:
-        data_cube = loadmat(CORRECTED_PATH)['indian_pines_corrected']
-        ground_truth = loadmat(GT_PATH)['indian_pines_gt']
-        h, w, b = data_cube.shape
-        classes = len(np.unique(ground_truth)) - 1
+        h, w, b = DATA_CUBE.shape
+        classes = len(np.unique(GROUND_TRUTH)) - 1
         return {
             "dimensions": f"{h}x{w}",
             "bands": b,
@@ -48,9 +61,11 @@ def analyze_hsi_metadata():
 
 @app.route("/api/visualize/rgb", methods=["GET"])
 def get_rgb_image():
+    if not DATA_LOADED:
+        return jsonify({"error": "Dataset not loaded on server"}), 500
     try:
-        data_cube = loadmat(CORRECTED_PATH)['indian_pines_corrected']
-        rgb = data_cube[:, :, [29, 19, 9]].astype(float)
+        # Using the pre-loaded DATA_CUBE for instant response
+        rgb = DATA_CUBE[:, :, [29, 19, 9]].astype(float)
         rgb /= np.max(rgb)
         plt.figure(figsize=(5, 5), facecolor='black')
         plt.imshow(rgb)
@@ -66,9 +81,11 @@ def get_rgb_image():
 
 @app.route("/api/visualize/spectral", methods=["GET"])
 def get_spectral_graph():
+    if not DATA_LOADED:
+        return jsonify({"error": "Dataset not loaded on server"}), 500
     try:
-        data_cube = loadmat(CORRECTED_PATH)['indian_pines_corrected']
-        pixel_sig = data_cube[50, 50, :]
+        # Instant access to spectral bands
+        pixel_sig = DATA_CUBE[50, 50, :]
         plt.style.use('dark_background')
         plt.figure(figsize=(10, 4))
         plt.plot(pixel_sig, color='#d4af37', linewidth=2)
@@ -93,11 +110,6 @@ def chat():
             "Content-Type": "application/json"
         }
 
-        
-
-        dataset_status = f"Dataset is {meta['status']}. It has {meta.get('bands', 'N/A')} bands."
-        
-        # Inside your chat() function in app.py:
         system_instructions = (
           f"You are Professor Pookie, PhD mentor for Indian Pines. "
           f"Dataset Status: {meta.get('bands')} bands of pure data. "
@@ -112,7 +124,8 @@ def chat():
                 {"role": "system", "content": system_instructions},
                 {"role": "user", "content": user_input}
             ],
-            "temperature": 0.5
+            "temperature": 0.3, # Lowered temperature slightly for faster logic
+            "max_tokens": 150    # Added token limit to stop AI from 'yapping' too long
         }
 
         response = requests.post(GROQ_URL, headers=headers, json=payload, timeout=20)
@@ -124,8 +137,5 @@ def chat():
         return jsonify({"answer": f"Glitch: {str(e)}"}), 500
 
 if __name__ == "__main__":
-    # Get port from environment variable, default to 5000 for local testing
     port = int(os.environ.get("PORT", 5000))
-    # Must use 0.0.0.0 to be visible to Render's network
     app.run(host='0.0.0.0', port=port)
-
